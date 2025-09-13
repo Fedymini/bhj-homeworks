@@ -42,4 +42,3 @@ if (event.target.classList.contains("product__add")) {
         cart.append(newCartProduct);
     }
 }
-});
