@@ -1,25 +1,28 @@
 document.addEventListener('DOMContentLoaded', function() {
     const elements = document.querySelectorAll('.has-tooltip');
+    let activeTooltip = null;
 
     elements.forEach(element => {
         element.addEventListener('click', function(e) {
             e.preventDefault();
 
-            // Remove existing active tooltip
-            const activeTooltip = document.querySelector('.tooltip_active');
+            const tooltipText = this.getAttribute('title');
+            
+            if (activeTooltip && activeTooltip.textContent === tooltipText) {
+                activeTooltip.classList.toggle('tooltip_active');
+                return;
+            }
+
             if (activeTooltip) {
                 activeTooltip.remove();
             }
 
-            // Create new tooltip
             const tooltip = document.createElement('div');
             tooltip.classList.add('tooltip', 'tooltip_active');
-            tooltip.textContent = this.getAttribute('title');
+            tooltip.textContent = tooltipText;
 
-            // Append to body to measure dimensions
             document.body.appendChild(tooltip);
 
-            // Get positions
             const elementRect = this.getBoundingClientRect();
             const tooltipRect = tooltip.getBoundingClientRect();
             const scrollLeft = window.pageXOffset || document.documentElement.scrollLeft;
@@ -50,9 +53,9 @@ document.addEventListener('DOMContentLoaded', function() {
                     tooltipTop = elementRect.bottom + scrollTop;
             }
 
-            // Set position
             tooltip.style.left = tooltipLeft + 'px';
             tooltip.style.top = tooltipTop + 'px';
+            activeTooltip = tooltip;
         });
     });
 });
